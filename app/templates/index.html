@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Car Database - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="section-title">Your Car Collection</h2>
+
+    {% if cars %}
+        <div class="car-grid">
+            {% for car in cars %}
+                <div class="car-card">
+                    <div class="car-image">
+                        <img src="{{ url_for('static', filename='images/car-placeholder.jpg') }}"
+                             alt="{{ car.make }} {{ car.model }}">
+                        <div class="car-badge">{{ car.year }}</div>
+                    </div>
+                    <div class="car-content">
+                        <h3 class="car-title">{{ car.make }} {{ car.model }}</h3>
+                        <div class="car-info">
+                            <span class="color">
+                                <i class="material-icons">palette</i>
+                                {{ car.color if car.color else 'N/A' }}
+                            </span>
+                            <span class="price">
+                                <i class="material-icons">attach_money</i>
+                                {{ "%.2f"|format(car.price) if car.price else 'N/A' }}
+                            </span>
+                        </div>
+                        <p class="car-description">
+                            {{ car.description|truncate(100) if car.description else 'No description available' }}
+                        </p>
+                        <div class="car-actions">
+                            <a href="{{ url_for('main.view_car', car_id=car.id) }}" class="btn btn-outline">
+                                <i class="material-icons" style="font-size: 16px; vertical-align: middle;">visibility</i> View
+                            </a>
+                            <a href="{{ url_for('main.edit_car', car_id=car.id) }}" class="btn btn-outline">
+                                <i class="material-icons" style="font-size: 16px; vertical-align: middle;">edit</i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="material-icons" style="font-size: 64px; color: var(--primary);">garage</i>
+            <h3>No cars in your collection yet</h3>
+            <p>Get started by adding your first vehicle</p>
+            <a href="{{ url_for('main.add_car') }}" class="btn btn-primary">
+                <i class="material-icons" style="vertical-align: middle;">add</i> Add Car
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

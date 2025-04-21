@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Add New' if not car else 'Edit' }} Car{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">
+        <i class="material-icons" style="vertical-align: middle; margin-right: 10px;">
+            {{ 'add_circle' if not car else 'edit' }}
+        </i>
+        {{ 'Add New Car' if not car else 'Edit ' + car.make + ' ' + car.model }}
+    </h2>
+
+    <form method="POST" action="{{ url_for('main.add_car') if not car else url_for('main.edit_car', car_id=car.id) }}">
+        <!-- CSRF Token MUST be inside the form -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="make">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">directions_car</i>
+                    Make *
+                </label>
+                <input type="text" id="make" name="make" value="{{ car.make if car else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="model">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">time_to_leave</i>
+                    Model *
+                </label>
+                <input type="text" id="model" name="model" value="{{ car.model if car else '' }}" required>
+            </div>
+        </div>
+
+        <!-- Rest of your form fields remain the same -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="year">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">calendar_today</i>
+                    Year *
+                </label>
+                <input type="number" id="year" name="year" min="1900" max="{{ current_year }}"
+                       value="{{ car.year if car else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="color">
+                    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">palette</i>
+                    Color
+                </label>
+                <input type="text" id="color" name="color" value="{{ car.color if car else '' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="price">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">attach_money</i>
+                Price
+            </label>
+            <input type="number" id="price" name="price" min="0" step="0.01"
+                   value="{{ car.price if car else '' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="description">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">description</i>
+                Description
+            </label>
+            <textarea id="description" name="description" rows="5">{{ car.description if car else '' }}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">
+                    {{ 'save' if car else 'add' }}
+                </i>
+                {{ 'Update' if car else 'Add' }} Car
+            </button>
+            <a href="{{ url_for('main.index') if not car else url_for('main.view_car', car_id=car.id) }}"
+               class="btn btn-outline">
+                <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">close</i>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Car Collection{% endblock %}</title>
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Google Fonts + Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Updated Font Awesome CDN (v6.5.0) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-ZsK6jBv3GjBoW6ljPb+PUuBqq8SQQakPi4PYRoBbLUFdQWGrxT7fn4QIg+MN+xKxkgRj3OSplX9EVT04xw1zpg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-car" style="margin-right: 10px;"></i>
+            <span>CarVault</span>
+        </div>
+        <nav>
+            <ul>
+                <li>
+                    <a href="{{ url_for('main.index') }}" class="{% if request.endpoint == 'main.index' %}active{% endif %}">
+                        <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">home</i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('main.add_car') }}" class="{% if request.endpoint == 'main.add_car' %}active{% endif %}">
+                        <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">add_circle</i>
+                        Add Car
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="flash-close">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <a href="{{ url_for('main.add_car') }}" class="fab">
+        <i class="material-icons">add</i>
+    </a>
+
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        <p>&copy; 2025 CarVault Database. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.flash-close').forEach(button => {
+            button.addEventListener('click', () => {
+                button.parentElement.style.opacity = '0';
+                setTimeout(() => button.parentElement.remove(), 300);
+            });
+        });
+    </script>
+</body>
+</html>

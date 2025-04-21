@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ car.make }} {{ car.model }} - Car Details{% endblock %}
+
+{% block content %}
+<div class="car-details">
+    <div class="car-hero">
+        <img src="https://source.unsplash.com/random/1200x600/?{{ car.make }}-{{ car.model }}-{{ car.year }}-car" 
+             alt="{{ car.make }} {{ car.model }} {{ car.year }}"
+             onerror="this.onerror=null;this.src='https://source.unsplash.com/random/1200x600/?car,vehicle'">
+    </div>
+
+    <h2>
+        <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 10px;">directions_car</i>
+        {{ car.make }} {{ car.model }} ({{ car.year }})
+    </h2>
+
+    <div class="detail-section">
+        <h3>
+            <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 5px;">info</i>
+            Details
+        </h3>
+        <p>
+            <strong>
+                <i class="material-icons" aria-hidden="true" style="font-size: 16px; vertical-align: middle; margin-right: 5px;">palette</i>
+                Color:
+            </strong>
+            {{ car.color if car.color else 'Not specified' }}
+        </p>
+        <p>
+            <strong>
+                <i class="material-icons" aria-hidden="true" style="font-size: 16px; vertical-align: middle; margin-right: 5px;">attach_money</i>
+                Price:
+            </strong>
+            {% if car.price %}${{ "%.2f"|format(car.price) }}{% else %}Not specified{% endif %}
+        </p>
+        <p>
+            <strong>
+                <i class="material-icons" aria-hidden="true" style="font-size: 16px; vertical-align: middle; margin-right: 5px;">calendar_today</i>
+                Added on:
+            </strong>
+            {{ car.created_at.strftime('%B %d, %Y') }}
+        </p>
+    </div>
+
+    <div class="detail-section">
+        <h3>
+            <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 5px;">description</i>
+            Description
+        </h3>
+        <p>{{ car.description if car.description else 'No description available.' }}</p>
+    </div>
+
+    <div class="car-actions">
+        <a href="{{ url_for('main.edit_car', car_id=car.id) }}" class="btn btn-edit">
+            <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 5px;">edit</i>
+            Edit
+        </a>
+        <form action="{{ url_for('main.delete_car', car_id=car.id) }}" method="POST" style="display: inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure you want to permanently delete this car?')">
+                <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 5px;">delete</i>
+                Delete
+            </button>
+        </form>
+        <a href="{{ url_for('main.index') }}" class="btn btn-back">
+            <i class="material-icons" aria-hidden="true" style="vertical-align: middle; margin-right: 5px;">arrow_back</i>
+            Back to List
+        </a>
+    </div>
+</div>
+
+<script>
+    // Enhance delete confirmation
+    document.querySelector('.btn-delete').addEventListener('click', function(e) {
+        if (!confirm('This will permanently delete the car record. Continue?')) {
+            e.preventDefault();
+        }
+    });
+</script>
+{% endblock %}
